@@ -4,8 +4,8 @@ const Switcher = (props) => {
   const { text } = props
   return (
     <div>
-      Switcher = text - {text}
-      <button>click</button>
+      Switcher = text - {text.toUpperCase()}
+      <button onClick={props.switching}>click</button>
     </div>
   )
 }
