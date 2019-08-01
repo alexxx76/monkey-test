@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import Control from './components/Control/Control';
-import Switcher from './components/Switcher/Switcher';
-import Cell from './components/Cell/Cell';
+import Control from './components/Control/Control'
+import Switcher from './components/Switcher/Switcher'
+import Cell from './components/Cell/Cell'
+import styles from './App.module.css'
 
 
 class App extends Component {
@@ -12,14 +13,14 @@ class App extends Component {
       timer: null,
       timerOn: false,
       length: 3,
-      time: 2,
+      time: 1,
       mode: 'start',
       counter: 0,
       cells: ((number) => {
         return new Array(number).fill(1).map((item, index) => ({
           id: index, value: null, status: 'clear'
         }))
-      })(15)
+      })(25)
     }
 
     this.changeLength = this.changeLength.bind(this)
@@ -124,12 +125,10 @@ class App extends Component {
 
   changeMode() {
     if (this.state.mode === 'start') this.startTest()
-    if (this.state.mode === 'test') this.resetTest()
-    if (this.state.mode === 'win') this.resetTest()
-    if (this.state.mode === 'lose') this.resetTest()
+    if (['test', 'win', 'lose'].includes(this.state.mode)) this.resetTest()
   }
 
-  verifySuccess(idCell, value) {
+  detectSuccess(idCell, value) {
     if (value === this.state.counter && value !== this.state.length) {
       this.setIdCellStatus(idCell, 'success')
     }
@@ -139,18 +138,23 @@ class App extends Component {
     }
   }
 
-  verifyFault(idCell, value) {
+  detectFault(idCell, value) {
     if (value !== this.state.counter) {
       this.setIdCellStatus(idCell, 'fail')
       this.setState({ mode: 'lose' })
     }
   }
 
+  getIdCellStatus(idCell) {
+    return this.state.cells.filter(item => (item.id === idCell))[0].status
+  }
+
   clickCell(idCell, value) {
-    if (this.state.mode === 'test' && !this.state.timerOn) {
+    if (this.state.mode === 'test' && !this.state.timerOn &&
+        (this.getIdCellStatus(idCell) !== 'success')) {
       if (value) {
-        this.verifySuccess(idCell, value)
-        this.verifyFault(idCell, value)
+        this.detectSuccess(idCell, value)
+        this.detectFault(idCell, value)
         this.incrementCounter()
       }
     }
@@ -162,37 +166,46 @@ class App extends Component {
 
   render() {
     return (
-      <div>
-        App - length - {this.state.length}
-        . time - {this.state.time}
-        . mode - {this.state.mode}
-        <Control
-          text="length"
-          min={1}
-          max={10}
-          value={3}
-          step={1}
-          changeValue={this.changeLength}
-        />
-        <Control
-          text="time"
-          min={0.25}
-          max={5}
-          value={2}
-          step={0.25}
-          changeValue={this.changeTime}
-        />
-        <Switcher
-          text={this.state.mode}
-          switching={this.changeMode}
-        />
-        <div>
-          {
-            this.state.cells.map(item => {
-              return <Cell key={item.id} id={item.id} data={item} transmit={this.clickCell} />
-            })
-          }
+      <div className={styles.App}>
+        <header className={styles.header}>
+          <h1>Monkey Test</h1>
+        </header>
+        <div className={styles.gameboard}>
+          <div className={styles.grid}>
+            {
+              this.state.cells.map(item => {
+                return <Cell key={item.id} id={item.id} data={item} transmit={this.clickCell} />
+              })
+            }
+          </div>
+          <div className={styles.controls}>
+            <Control
+              text="length"
+              min={3}
+              max={10}
+              value={this.state.length}
+              step={1}
+              dis={this.state.mode !== 'start'}
+              changeValue={this.changeLength}
+            />
+            <Switcher
+              text={this.state.mode}
+              switching={this.changeMode}
+            />
+            <Control
+              text="time"
+              min={0.125}
+              max={5}
+              value={this.state.time}
+              step={0.125}
+              dis={this.state.mode !== 'start'}
+              changeValue={this.changeTime}
+            />
+          </div>
         </div>
+        <footer className={styles.footer}>
+          <h3>footer</h3>
+        </footer>
       </div>
     )
   }
