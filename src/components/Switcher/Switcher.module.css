@@ -1,0 +1,16 @@
+.switcher {
+  flex-basis: 50%;
+}
+
+.button{
+  width: 100%;
+  height: 100%;
+  font-size: 30px;
+  font-family: Oswald;
+}
+
+@media all and (max-width: 420px) {
+  .switcher {
+    flex-basis: 40%;
+  }
+}
