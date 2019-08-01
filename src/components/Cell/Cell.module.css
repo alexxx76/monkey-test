@@ -1,0 +1,44 @@
+.cell {
+  width: 20%;
+  height: 20%;
+  background: #ccc;
+  font-family: Oswald;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: inset -2px -2px 3px #aaa, inset 2px 2px 3px #fff;
+}
+
+.show {
+  background: #777;
+  color: #eee;
+}
+
+.hide {
+  background: #aaa;
+}
+
+.hide:hover {
+  background: #999;
+}
+
+.success {
+  background: #8b8;
+  color: #fff;
+}
+
+.success:hover {
+  background: #7a7;
+}
+
+.fail {
+  background: #b88;
+  color: #fff;
+}
+
+.fail:hover {
+  background: #a77;
+}

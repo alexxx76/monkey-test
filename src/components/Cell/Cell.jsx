@@ -1,39 +1,21 @@
 import React from 'react'
+import styles from './Cell.module.css'
 
 const Cell = (props) => {
   const { id, data } = props
   const { transmit } = props
 
-  let inlinestyle = {}
-  switch (data.status) {
-    case 'clear':
-      inlinestyle = {background: ''}
-      break
-    case 'show':
-      inlinestyle = {background: '#acc'}
-      break
-    case 'hide':
-      inlinestyle = {background: '#cac'}
-      break
-    case 'success':
-      inlinestyle = {background: '#cfc'}
-      break
-    case 'fail':
-      inlinestyle = {background: '#fcc'}
-      break
-    default:
-      inlinestyle = {background: ''}
-  }
+  let mode = `${styles[data.status]}`
+
+  let cellCSSClass = `${styles.cell} ${mode}`
 
   const handleClick = () => {
     transmit(id, data.value)
   }
 
   return (
-    <div>
-      Cell = id - {id}
-      . - {data.value ? data.value : null}
-      <button onClick={handleClick} style={inlinestyle}>click</button>
+    <div className={cellCSSClass} onClick={handleClick}>
+      {data.status !== 'hide' ? data.value : null}
     </div>
   )
 }
