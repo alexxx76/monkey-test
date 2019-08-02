@@ -13,7 +13,7 @@ class App extends Component {
       timer: null,
       timerOn: false,
       length: 3,
-      time: 1,
+      time: 0.5,
       mode: 'start',
       counter: 0,
       cells: ((number) => {
@@ -46,8 +46,8 @@ class App extends Component {
 
   resetTest() {
     this.setState({ mode: 'start' })
-    this.resetCounter()
     this.stopTimer()
+    this.resetCounter()
     this.resetCells()
   }
 
@@ -95,31 +95,31 @@ class App extends Component {
   resetCells() {
     this.setCellsStatus('clear')
     this.setState((state, props) => {
-      state.cells = state.cells.map(item => {
+      const newCells = state.cells.map(item => {
         item.value = null
         return item
       })
-      return state
+      return { cells: newCells }
     })
   }
 
   setCellsStatus(status) {
     this.setState((state, props) => {
-      state.cells = state.cells.map(item => {
+      const newCells = state.cells.map(item => {
         if (item.value) item.status = status
         return item
       })
-      return state
+      return { cells: newCells }
     })
   }
 
   setIdCellStatus(idCell, status) {
     this.setState((state, props) => {
-      state.cells = state.cells.map(item => {
+      const newCells = state.cells.map(item => {
         if (item.id === idCell) item.status = status
         return item
       })
-      return state
+      return { cells: newCells }
     })
   }
 
@@ -129,12 +129,11 @@ class App extends Component {
   }
 
   detectSuccess(idCell, value) {
-    if (value === this.state.counter && value !== this.state.length) {
+    if (value === this.state.counter) {
       this.setIdCellStatus(idCell, 'success')
-    }
-    if (value === this.state.counter && value === this.state.length) {
-      this.setIdCellStatus(idCell, 'success')
-      this.setState({ mode: 'win' })
+      if (value === this.state.length) {
+        this.setState({ mode: 'win' })
+      }
     }
   }
 
@@ -151,7 +150,7 @@ class App extends Component {
 
   clickCell(idCell, value) {
     if (this.state.mode === 'test' && !this.state.timerOn &&
-        (this.getIdCellStatus(idCell) !== 'success')) {
+      (this.getIdCellStatus(idCell) !== 'success')) {
       if (value) {
         this.detectSuccess(idCell, value)
         this.detectFault(idCell, value)
@@ -174,7 +173,14 @@ class App extends Component {
           <div className={styles.grid}>
             {
               this.state.cells.map(item => {
-                return <Cell key={item.id} id={item.id} data={item} transmit={this.clickCell} />
+                return (
+                  <Cell
+                    key={item.id}
+                    id={item.id}
+                    data={item}
+                    transmit={this.clickCell}
+                  />
+                )
               })
             }
           </div>
@@ -204,7 +210,7 @@ class App extends Component {
           </div>
         </div>
         <footer className={styles.footer}>
-          <h3>footer</h3>
+          <h5>разработик Алкесандр Карпенко - <a href="https://github.com/alexxx76/monkey-test">GitHub</a></h5>
         </footer>
       </div>
     )

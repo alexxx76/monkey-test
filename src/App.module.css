@@ -16,6 +16,7 @@
   width: 100%;
   background: linear-gradient(#aaa, #ddd);
   display: flex;
+  text-transform: uppercase;
   flex-direction: column;
   justify-content: center;
   color: #444;
@@ -47,7 +48,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  color: #444;
+  color: #333;
 }
 
 @media all and (max-width: 420px) {
