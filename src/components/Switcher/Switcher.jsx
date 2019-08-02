@@ -2,12 +2,12 @@ import React from 'react'
 import styles from './Switcher.module.css'
 
 const Switcher = (props) => {
-  const { text } = props
+  const { text, switching } = props
   return (
     <div className={styles.switcher}>
       <button
         className={styles.button}
-        onClick={props.switching}
+        onClick={switching}
       >
         {text.toUpperCase()}
       </button>
