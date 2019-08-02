@@ -5,14 +5,15 @@ class Control extends Component {
   constructor(props) {
     super(props)
 
-    const { text, min, max, value, step, dis } = this.props
+    const { text, min, max, value, step, dis, changeValue } = this.props
     this.state = {
       text,
       min,
       max,
       value,
       step,
-      dis
+      dis,
+      changeValue
     }
 
     this.decrement = this.decrement.bind(this)
@@ -23,7 +24,7 @@ class Control extends Component {
     this.setState((state, props) => ({
       value: (state.value > state.min ? state.value - state.step : state.value)
     }), () => {
-      this.props.changeValue(this.state.value)
+      this.state.changeValue(this.state.value)
     })
   }
 
@@ -31,7 +32,7 @@ class Control extends Component {
     this.setState((state, props) => ({
       value: (state.value < state.max ? state.value + state.step : state.value)
     }), () => {
-      this.props.changeValue(this.state.value)
+      this.state.changeValue(this.state.value)
     })
   }
 
@@ -68,6 +69,16 @@ class Control extends Component {
       </div>
     )
   }
+}
+
+Control.defaultProps = {
+  text: '',
+  min: 1,
+  max: 10,
+  value: 5,
+  step: 1,
+  dis: false,
+  changeValue: () => {}
 }
 
 export default Control
