@@ -2,11 +2,9 @@ import React from 'react'
 import styles from './Cell.module.css'
 
 const Cell = (props) => {
-  const { id, data } = props
-  const { transmit } = props
+  const { id, data, transmit } = props
 
   let mode = `${styles[data.status]}`
-
   let cellCSSClass = `${styles.cell} ${mode}`
 
   const handleClick = () => {
