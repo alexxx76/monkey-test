@@ -17,7 +17,7 @@ class App extends Component {
       mode: 'start',
       counter: 0,
       cells: ((number) => {
-        return new Array(number).fill(1).map((item, index) => ({
+        return new Array(number).fill(1).map((_, index) => ({
           id: index, value: null, status: 'clear'
         }))
       })(25)
