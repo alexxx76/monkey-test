@@ -9,6 +9,7 @@ class App extends Component {
   constructor() {
     super()
 
+    const amountCells = 25
     this.state = {
       timer: null,
       timerOn: false,
@@ -17,10 +18,10 @@ class App extends Component {
       mode: 'start',
       counter: 0,
       cells: ((number) => {
-        return new Array(number).fill(1).map((item, index) => ({
+        return new Array(number).fill(1).map((_, index) => ({
           id: index, value: null, status: 'clear'
         }))
-      })(25)
+      })(amountCells)
     }
 
     this.changeLength = this.changeLength.bind(this)
@@ -53,7 +54,7 @@ class App extends Component {
 
   startTimer() {
     this.setCellsStatus('show')
-    this.setState((state, props) => {
+    this.setState((state) => {
       state.timer = setTimeout(() => {
         this.stopTimer()
       }, this.state.time * 1000)
@@ -89,12 +90,12 @@ class App extends Component {
   }
 
   incrementCounter() {
-    this.setState((state, props) => ({ counter: state.counter + 1 }))
+    this.setState((state) => ({ counter: state.counter + 1 }))
   }
 
   resetCells() {
     this.setCellsStatus('clear')
-    this.setState((state, props) => {
+    this.setState((state) => {
       const newCells = state.cells.map(item => {
         item.value = null
         return item
@@ -104,7 +105,7 @@ class App extends Component {
   }
 
   setCellsStatus(status) {
-    this.setState((state, props) => {
+    this.setState((state) => {
       const newCells = state.cells.map(item => {
         if (item.value) item.status = status
         return item
@@ -114,7 +115,7 @@ class App extends Component {
   }
 
   setIdCellStatus(idCell, status) {
-    this.setState((state, props) => {
+    this.setState((state) => {
       const newCells = state.cells.map(item => {
         if (item.id === idCell) item.status = status
         return item
@@ -195,7 +196,7 @@ class App extends Component {
               changeValue={this.changeLength}
             />
             <Switcher
-              text={this.state.mode}
+              text={this.state.mode === 'test' ? 'stop' : this.state.mode}
               switching={this.changeMode}
             />
             <Control
@@ -210,7 +211,7 @@ class App extends Component {
           </div>
         </div>
         <footer className={styles.footer}>
-          <h5>разработик Алкесандр Карпенко - <a href="https://github.com/alexxx76/monkey-test">GitHub</a></h5>
+          <h5>разработчик Алкесандр Карпенко - <a href="https://github.com/alexxx76/monkey-test">GitHub</a></h5>
         </footer>
       </div>
     )
