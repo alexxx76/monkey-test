@@ -14,3 +14,13 @@
     flex-basis: 40%;
   }
 }
+
+@media (max-height: 420px) and (orientation: landscape) {
+  .switcher {
+    flex-basis: 20%;
+  }
+
+  .button {
+    font-size: 24px;
+  }
+}

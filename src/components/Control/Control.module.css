@@ -38,3 +38,9 @@
     flex-basis: 30%;
   }
 }
+
+@media (max-height: 420px) and (orientation: landscape) {
+  .control {
+    flex-basis: 40%;
+  }
+}
