@@ -13,12 +13,12 @@
 }
 
 .show {
-  background: #777;
+  background: #555;
   color: #eee;
 }
 
 .hide {
-  background: #aaa;
+  background: #888;
 }
 
 .hide:hover {
@@ -26,19 +26,18 @@
 }
 
 .success {
-  background: #8b8;
-  color: #fff;
+  background: #eee;
 }
 
 .success:hover {
-  background: #7a7;
+  background: #fff;
 }
 
 .fail {
-  background: #b88;
-  color: #fff;
+  background: #aaa;
+  color: #ddd;
 }
 
 .fail:hover {
-  background: #a77;
+  background: #888;
 }
