@@ -1,34 +1,29 @@
-import React, { Component } from 'react'
-import Control from './components/Control/Control'
-import Switcher from './components/Switcher/Switcher'
-import Cell from './components/Cell/Cell'
-import styles from './App.module.css'
-
+import React, { Component } from 'react';
+import Control from './components/Control/Control';
+import Switcher from './components/Switcher/Switcher';
+import Cell from './components/Cell/Cell';
+import { getState, addChangeListener } from './flux/store';
+import styles from './App.module.css';
 
 class App extends Component {
   constructor() {
     super()
 
-    const amountCells = 25
-    this.state = {
-      timer: null,
-      timerOn: false,
-      length: 3,
-      time: 0.5,
-      mode: 'start',
-      counter: 0,
-      cells: ((number) => {
-        return new Array(number).fill(1).map((_, index) => ({
-          id: index, value: null, status: 'clear'
-        }))
-      })(amountCells)
-    }
+    this.state = getState();
 
     this.changeLength = this.changeLength.bind(this)
     this.changeTime = this.changeTime.bind(this)
     this.changeMode = this.changeMode.bind(this)
     this.clickCell = this.clickCell.bind(this)
   }
+
+  componentDidMount() {
+    addChangeListener(this.update);
+  }
+
+  update = () => this.setState(getState());
+
+
 
   changeLength(value) {
     this.setState({ length: value })
