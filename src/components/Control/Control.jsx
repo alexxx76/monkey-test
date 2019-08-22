@@ -1,74 +1,33 @@
-import React, { Component } from 'react'
-import styles from './Control.module.css'
+import React from 'react';
+import { emit } from '../../flux/dispatcher';
+import { action } from '../../flux/actions';
+import { getControlValue, getControlStatus } from '../../flux/store.js';
+import styles from './Control.module.css';
 
-class Control extends Component {
-  constructor(props) {
-    super(props)
+const increment = descriptor => emit(action.CONTROL_INCREMENT, descriptor);
 
-    const {
-      text = '',
-      min = 1,
-      max = 10,
-      value = 5,
-      step = 1,
-      dis = false,
-      changeValue = () => {}
-    } = this.props
-    this.state = { text, min, max, value, step, dis, changeValue }
+const decrement = descriptor => emit(action.CONTROL_DECREMENT, descriptor);
 
-    this.decrement = this.decrement.bind(this)
-    this.increment = this.increment.bind(this)
-  }
-
-  decrement() {
-    this.setState((state, props) => ({
-      value: (state.value > state.min ? state.value - state.step : state.value)
-    }), () => {
-      this.state.changeValue(this.state.value)
-    })
-  }
-
-  increment() {
-    this.setState((state, props) => ({
-      value: (state.value < state.max ? state.value + state.step : state.value)
-    }), () => {
-      this.state.changeValue(this.state.value)
-    })
-  }
-
-  format(value) {
-    const digits = this.state.step.toString().split('.').splice(1).join('').length
-    return value.toFixed(digits)
-  }
-
-  componentDidUpdate() {
-    this.setState((state, props) => {
-      if (state.dis !== props.dis) return {
-        dis: props.dis
-      }
-    })
-  }
-
-  render() {
-    return (
-      <div className={styles.control}>
-        <div className={styles.text}>{this.state.text}</div>
-        <div className={styles.value}>{this.format(this.state.value)}</div>
-        <div className={styles.commands}>
-          <button
-            className={styles.button}
-            onClick={this.decrement}
-            disabled={this.state.dis}
-          >-</button>
-          <button
-            className={styles.button}
-            onClick={this.increment}
-            disabled={this.state.dis}
-          >+</button>
-        </div>
+const Control = (props) => {
+  const { text } = props;
+  return (
+    <div className={styles.control}>
+      <div className={styles.text}>{text}</div>
+      <div className={styles.value}>{getControlValue(text)}</div>
+      <div className={styles.commands}>
+        <button
+          className={styles.button}
+          onClick={() => { decrement(text) }}
+          disabled={getControlStatus(text)}
+        >-</button>
+        <button
+          className={styles.button}
+          onClick={() => { increment(text) }}
+          disabled={getControlStatus(text)}
+        >+</button>
       </div>
-    )
-  }
-}
+    </div>
+  )
+};
 
-export default Control
+export default Control;

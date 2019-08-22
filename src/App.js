@@ -11,8 +11,6 @@ class App extends Component {
 
     this.state = getState();
 
-    this.changeLength = this.changeLength.bind(this)
-    this.changeTime = this.changeTime.bind(this)
     this.changeMode = this.changeMode.bind(this)
     this.clickCell = this.clickCell.bind(this)
   }
@@ -24,14 +22,6 @@ class App extends Component {
   update = () => this.setState(getState());
 
 
-
-  changeLength(value) {
-    this.setState({ length: value })
-  }
-
-  changeTime(value) {
-    this.setState({ time: value })
-  }
 
   startTest() {
     this.setState({ mode: 'test' })
@@ -183,12 +173,7 @@ class App extends Component {
           <div className={styles.controls}>
             <Control
               text="length"
-              min={3}
-              max={10}
-              value={this.state.length}
-              step={1}
-              dis={this.state.mode !== 'start'}
-              changeValue={this.changeLength}
+              // dis={this.state.mode !== 'start'}
             />
             <Switcher
               text={this.state.mode === 'test' ? 'stop' : this.state.mode}
@@ -196,12 +181,7 @@ class App extends Component {
             />
             <Control
               text="time"
-              min={0.125}
-              max={5}
-              value={this.state.time}
-              step={0.125}
-              dis={this.state.mode !== 'start'}
-              changeValue={this.changeTime}
+              // dis={this.state.mode !== 'start'}
             />
           </div>
         </div>
