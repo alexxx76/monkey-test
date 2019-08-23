@@ -47,7 +47,7 @@ class App extends Component {
           </div>
         </div>
         <footer className={styles.footer}>
-          <h5>разработчик Алкесандр Карпенко - <a href="https://github.com/alexxx76/monkey-test">GitHub</a></h5>
+          <h5>разработчик Александр Карпенко - <a href="https://github.com/alexxx76/monkey-test">GitHub</a></h5>
         </footer>
       </div>
     );
