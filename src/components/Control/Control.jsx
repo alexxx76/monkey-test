@@ -8,8 +8,7 @@ const increment = descriptor => emit(action.CONTROL_INCREMENT, descriptor);
 
 const decrement = descriptor => emit(action.CONTROL_DECREMENT, descriptor);
 
-const Control = (props) => {
-  const { text } = props;
+const Control = ({ text }) => {
   return (
     <div className={styles.control}>
       <div className={styles.text}>{text}</div>
