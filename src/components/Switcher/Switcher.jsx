@@ -4,7 +4,7 @@ import { action } from '../../flux/actions';
 import { getSwitcherText } from '../../flux/store';
 import styles from './Switcher.module.css';
 
-const changeMode = () => { emit(action.MODE_CHANGE); };
+const changeMode = () => emit(action.MODE_CHANGE);
 
 const Switcher = () => {
   return (
@@ -16,7 +16,7 @@ const Switcher = () => {
         {getSwitcherText()}
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default Switcher
+export default Switcher;
