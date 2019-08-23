@@ -1,21 +1,19 @@
-import React from 'react'
-import styles from './Cell.module.css'
+import React from 'react';
+import { emit } from '../../flux/dispatcher';
+import { action } from '../../flux/actions';
+import styles from './Cell.module.css';
 
-const Cell = (props) => {
-  const { id, data, transmit } = props
+const handleClick = (id, value) => emit(action.CELL_CLICK, id, value);
 
-  let mode = `${styles[data.status]}`
-  let cellCSSClass = `${styles.cell} ${mode}`
-
-  const handleClick = () => {
-    transmit(id, data.value)
-  }
+const Cell = ({ id, data }) => {
+  let mode = `${styles[data.status]}`;
+  let cellCSSClass = `${styles.cell} ${mode}`;
 
   return (
-    <div className={cellCSSClass} onClick={handleClick}>
+    <div className={cellCSSClass} onClick={() => { handleClick(id, data.value) }}>
       {data.status !== 'hide' ? data.value : null}
     </div>
-  )
-}
+  );
+};
 
-export default Cell
+export default Cell;

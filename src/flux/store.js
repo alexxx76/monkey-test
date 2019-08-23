@@ -43,7 +43,9 @@ export const getState = () => state;
 export const getSwitcherText = () => {
   let text = state.mode === 'test' ? 'stop' : state.mode;
   return text.toUpperCase();
-}
+};
+
+export const getCells = () => state.cells;
 
 export const getControlValue = controlText => {
   let value = state[controlText];
@@ -113,6 +115,7 @@ const startTimer = () => {
   setCellsStatus('show');
   state.timer = setTimeout(() => {
     stopTimer();
+    notify();
   }, state.time * 1000);
   state.timerOn = true;
 };
@@ -121,7 +124,6 @@ const stopTimer = () => {
   setCellsStatus('hide');
   clearTimeout(state.timer);
   state.timerOn = false;
-  notify();
 };
 
 const startTest = () => {
@@ -144,4 +146,52 @@ listen(action.MODE_CHANGE, () => {
   if (state.mode === 'start') startTest();
   else if (['test', 'win', 'lose'].includes(state.mode)) resetTest();
   notify();
+});
+
+const getIdCellStatus = (idCell) => {
+  return state.cells.filter(item => (item.id === idCell))[0].status;
+};
+
+const setIdCellStatus = (idCell, status) => {
+  const newCells = state.cells.map(item => {
+    if (item.id === idCell) item.status = status;
+    return item;
+  });
+  state.cells = newCells;
+};
+
+const detectSuccess = (idCell, value) => {
+  if (value === state.counter) {
+    setIdCellStatus(idCell, 'success');
+    if (value === state.length) state.mode = 'win';
+  }
+};
+
+const detectFault = (idCell, value) => {
+  if (value !== state.counter) {
+    setIdCellStatus(idCell, 'fail');
+    state.mode = 'lose';
+  }
+};
+
+const incrementCounter = () => state.counter = state.counter + 1;
+
+const clickCell = (idCell, value) => {
+  if (state.mode === 'test' && !state.timerOn &&
+    (getIdCellStatus(idCell) !== 'success')) {
+    if (value) {
+      detectSuccess(idCell, value);
+      detectFault(idCell, value);
+      incrementCounter();
+    }
+  }
+};
+
+listen(action.CELL_CLICK, (id, value) => {
+  clickCell(id, value);
+  notify();
+});
+
+listen(action.APP_UNMOUNT, () => {
+  clearTimeout(state.timer);
 });
