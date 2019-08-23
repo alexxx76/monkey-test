@@ -9,6 +9,7 @@ const cellsInit = (number) => {
 const amountCells = 25;
 
 const state = {
+  amountCells: 25,
   timer: null,
   timerOn: false,
   mode: 'start',
@@ -29,20 +30,24 @@ const state = {
     step: 0.125,
     disabledStatus: false
   },
-  cells: cellsInit(amountCells)
+  cells: cellsInit(amountCells),
 };
 
 const listeners = [];
 
-export const addChangeListener = fn => listeners.push(fn);
-
 const notify = () => listeners.forEach(fn => fn());
+
+const formatByValueStep = (value, step) => {
+  const digits = step.toString().split('.').splice(1).join('').length;
+  return value.toFixed(digits);
+};
+
+export const addChangeListener = fn => listeners.push(fn);
 
 export const getState = () => state;
 
 export const getSwitcherText = () => {
-  let text = state.mode === 'test' ? 'stop' : state.mode;
-  return text.toUpperCase();
+  return (state.mode === 'test' ? 'stop' : state.mode).toUpperCase();
 };
 
 export const getCells = () => state.cells;
@@ -50,29 +55,14 @@ export const getCells = () => state.cells;
 export const getControlValue = controlText => {
   let value = state[controlText];
   const step = state[`${controlText}Control`].step;
-  const digits = step.toString().split('.').splice(1).join('').length;
-  return value.toFixed(digits);
+  return formatByValueStep(value, step);
 };
 
 export const getControlStatus = controlText => {
   return state[`${controlText}Control`].disabledStatus;
 };
 
-listen(action.CONTROL_DECREMENT, controlText => {
-  let value = state[controlText];
-  const { step, min } = state[`${controlText}Control`];
-  state[controlText] = (value > min ? value - step : value);
-  notify();
-});
-
-listen(action.CONTROL_INCREMENT, controlText => {
-  let value = state[controlText];
-  const { step, max } = state[`${controlText}Control`];
-  state[controlText] = (value < max ? value + step : value);
-  notify();
-});
-
-const changeControlsStatus = (status) => {
+const changeAllControlsStatus = status => {
   state.lengthControl.disabledStatus = status;
   state.timeControl.disabledStatus = status;
 };
@@ -128,7 +118,7 @@ const stopTimer = () => {
 
 const startTest = () => {
   state.mode = 'test';
-  changeControlsStatus(true);
+  changeAllControlsStatus(true);
   setRandom();
   initCounter();
   startTimer();
@@ -136,17 +126,11 @@ const startTest = () => {
 
 const resetTest = () => {
   state.mode = 'start';
-  changeControlsStatus(false);
+  changeAllControlsStatus(false);
   stopTimer();
   resetCounter();
   resetCells();
 };
-
-listen(action.MODE_CHANGE, () => {
-  if (state.mode === 'start') startTest();
-  else if (['test', 'win', 'lose'].includes(state.mode)) resetTest();
-  notify();
-});
 
 const getIdCellStatus = (idCell) => {
   return state.cells.filter(item => (item.id === idCell))[0].status;
@@ -176,9 +160,12 @@ const detectFault = (idCell, value) => {
 
 const incrementCounter = () => state.counter = state.counter + 1;
 
+const isCellClickable = idCell => {
+  return !!(state.mode === 'test' && !state.timerOn && (getIdCellStatus(idCell) !== 'success'));
+}
+
 const clickCell = (idCell, value) => {
-  if (state.mode === 'test' && !state.timerOn &&
-    (getIdCellStatus(idCell) !== 'success')) {
+  if (isCellClickable(idCell)) {
     if (value) {
       detectSuccess(idCell, value);
       detectFault(idCell, value);
@@ -186,6 +173,26 @@ const clickCell = (idCell, value) => {
     }
   }
 };
+
+listen(action.CONTROL_DECREMENT, controlText => {
+  let value = state[controlText];
+  const { step, min } = state[`${controlText}Control`];
+  state[controlText] = (value > min ? value - step : value);
+  notify();
+});
+
+listen(action.CONTROL_INCREMENT, controlText => {
+  let value = state[controlText];
+  const { step, max } = state[`${controlText}Control`];
+  state[controlText] = (value < max ? value + step : value);
+  notify();
+});
+
+listen(action.MODE_CHANGE, () => {
+  if (state.mode === 'start') startTest();
+  else if (['test', 'win', 'lose'].includes(state.mode)) resetTest();
+  notify();
+});
 
 listen(action.CELL_CLICK, (id, value) => {
   clickCell(id, value);
