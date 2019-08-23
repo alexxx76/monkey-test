@@ -11,7 +11,6 @@ class App extends Component {
 
     this.state = getState();
 
-    this.changeMode = this.changeMode.bind(this)
     this.clickCell = this.clickCell.bind(this)
   }
 
@@ -19,84 +18,16 @@ class App extends Component {
     addChangeListener(this.update);
   }
 
-  update = () => this.setState(getState());
-
-
-
-  startTest() {
-    this.setState({ mode: 'test' })
-    this.setRandom()
-    this.initCounter()
-    this.startTimer()
+  update = () => {
+    this.setState(getState(), () => {
+      // console.log(this.state);
+    });
   }
 
-  resetTest() {
-    this.setState({ mode: 'start' })
-    this.stopTimer()
-    this.resetCounter()
-    this.resetCells()
-  }
 
-  startTimer() {
-    this.setCellsStatus('show')
-    this.setState((state) => {
-      state.timer = setTimeout(() => {
-        this.stopTimer()
-      }, this.state.time * 1000)
-      return state
-    }, this.setState({ timerOn: true }))
-  }
-
-  stopTimer() {
-    this.setCellsStatus('hide')
-    clearTimeout(this.state.timer)
-    this.setState({ timerOn: false })
-  }
-
-  setRandom() {
-    const arr = new Array(this.state.cells.length).fill(null)
-    for (let i = 0; i < this.state.length; i++) {
-      arr[i] = i + 1
-    }
-    arr.sort(() => .5 - Math.random())
-    const newCells = this.state.cells.map((item, index) => {
-      item.value = arr[index]
-      return item
-    })
-    this.setState({ cells: newCells })
-  }
-
-  resetCounter() {
-    this.setState({ counter: 0 })
-  }
-
-  initCounter() {
-    this.setState({ counter: 1 })
-  }
 
   incrementCounter() {
     this.setState((state) => ({ counter: state.counter + 1 }))
-  }
-
-  resetCells() {
-    this.setCellsStatus('clear')
-    this.setState((state) => {
-      const newCells = state.cells.map(item => {
-        item.value = null
-        return item
-      })
-      return { cells: newCells }
-    })
-  }
-
-  setCellsStatus(status) {
-    this.setState((state) => {
-      const newCells = state.cells.map(item => {
-        if (item.value) item.status = status
-        return item
-      })
-      return { cells: newCells }
-    })
   }
 
   setIdCellStatus(idCell, status) {
@@ -107,11 +38,6 @@ class App extends Component {
       })
       return { cells: newCells }
     })
-  }
-
-  changeMode() {
-    if (this.state.mode === 'start') this.startTest()
-    if (['test', 'win', 'lose'].includes(this.state.mode)) this.resetTest()
   }
 
   detectSuccess(idCell, value) {
@@ -171,18 +97,9 @@ class App extends Component {
             }
           </div>
           <div className={styles.controls}>
-            <Control
-              text="length"
-              // dis={this.state.mode !== 'start'}
-            />
-            <Switcher
-              text={this.state.mode === 'test' ? 'stop' : this.state.mode}
-              switching={this.changeMode}
-            />
-            <Control
-              text="time"
-              // dis={this.state.mode !== 'start'}
-            />
+            <Control text="length" />
+            <Switcher />
+            <Control text="time" />
           </div>
         </div>
         <footer className={styles.footer}>

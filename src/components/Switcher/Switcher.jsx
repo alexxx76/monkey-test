@@ -1,15 +1,19 @@
-import React from 'react'
-import styles from './Switcher.module.css'
+import React from 'react';
+import { emit } from '../../flux/dispatcher';
+import { action } from '../../flux/actions';
+import { getSwitcherText } from '../../flux/store';
+import styles from './Switcher.module.css';
 
-const Switcher = (props) => {
-  const { text, switching } = props
+const changeMode = () => { emit(action.MODE_CHANGE); };
+
+const Switcher = () => {
   return (
     <div className={styles.switcher}>
       <button
         className={styles.button}
-        onClick={switching}
+        onClick={changeMode}
       >
-        {text.toUpperCase()}
+        {getSwitcherText()}
       </button>
     </div>
   )
