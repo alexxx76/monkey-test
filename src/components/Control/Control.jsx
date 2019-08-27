@@ -1,7 +1,7 @@
 import React from 'react';
 import { emit } from '../../flux/dispatcher';
 import { action } from '../../flux/actions';
-import { getControlValue, getControlStatus } from '../../flux/store.js';
+import { getControlFormatedValue, getControlStatus } from '../../flux/store.js';
 import styles from './Control.module.css';
 
 const increment = descriptor => emit(action.CONTROL_INCREMENT, descriptor);
@@ -12,7 +12,7 @@ const Control = ({ text }) => {
   return (
     <div className={styles.control}>
       <div className={styles.text}>{text}</div>
-      <div className={styles.value}>{getControlValue(text)}</div>
+      <div className={styles.value}>{getControlFormatedValue(text)}</div>
       <div className={styles.commands}>
         <button
           className={styles.button}
